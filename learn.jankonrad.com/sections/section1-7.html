@@ -1,0 +1,137 @@
+<section id="section1-9" class="container my-5">
+    <h3 class="mb-4">Příkazový řádek (CMD) a PowerShell – základy práce s textovým rozhraním</h3>
+  
+    <!-- Co se naučíš? -->
+    <div class="container my-4 p-4 border rounded bg-light">
+      <h3 class="mb-3">Co se naučíš?</h3>
+      <p>V této lekci se naučíš pracovat s textovým rozhraním systému Windows – příkazovým řádkem (CMD) a PowerShellem. Seznámíš se s historií těchto nástrojů, naučíš se základní příkazy a vyzkoušíš si praktické využití při správě souborů nebo přípravě jednoduchých automatizací.</p>
+      <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item">Co je příkazový řádek (CMD) a PowerShell</li>
+        <li class="list-group-item">Základní příkazy a syntaxe</li>
+        <li class="list-group-item">Rozdíly mezi CMD a PowerShellem</li>
+        <li class="list-group-item">Spouštění skriptů a základní automatizace</li>
+        <li class="list-group-item">Bezpečné a praktické využití ve škole i doma</li>
+      </ul>
+      <div class="alert alert-info" role="alert">
+        💡 <strong>Tip:</strong> PowerShell umožňuje vytvářet skripty, které mohou šetřit čas – např. při údržbě souborů nebo automatickém zálohování.
+      </div>
+    </div>
+  
+    <!-- Úvodní část -->
+    <h5 class="mt-5">Co je CMD a PowerShell?</h5>
+    <p><strong>CMD (Command Prompt)</strong> je původní textové rozhraní operačního systému Windows. Umožňuje spouštět příkazy, skripty a nástroje bez grafického rozhraní.</p>
+    <p><strong>PowerShell</strong> je modernější nástroj od Microsoftu, který kombinuje příkazový řádek, skriptovací jazyk a automatizační nástroje. Je mnohem mocnější a vhodnější pro pokročilou správu systému.</p>
+  
+    <div class="row my-4">
+      <div class="col-md-6">
+        <h6>Spuštění CMD</h6>
+        <p><code>Win + R</code> → napiš <code>cmd</code> a potvrď Enterem</p>
+      </div>
+      <div class="col-md-6">
+        <h6>Spuštění PowerShellu</h6>
+        <p><code>Win + X</code> → zvol <code>Windows PowerShell</code></p>
+      </div>
+    </div>
+  
+    <!-- Rozdíly -->
+    <h5 class="mt-5">Rozdíly mezi CMD a PowerShellem</h5>
+    <table class="table table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th>Vlastnost</th>
+          <th>CMD</th>
+          <th>PowerShell</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Syntaxe</td>
+          <td>Jednodušší</td>
+          <td>Objektově orientovaná</td>
+        </tr>
+        <tr>
+          <td>Skriptování</td>
+          <td>Omezené možnosti</td>
+          <td>Rozsáhlé možnosti automatizace</td>
+        </tr>
+        <tr>
+          <td>Modernost</td>
+          <td>Zastaralé</td>
+          <td>Aktivně vyvíjené Microsoftem</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Praktické příkazy -->
+    <h5 class="mt-4">Základní příkazy PowerShellu</h5>
+    <ul class="list-group mb-4">
+      <li class="list-group-item"><code>Get-ChildItem</code> – výpis obsahu složky (podobné jako <code>dir</code>)</li>
+      <li class="list-group-item"><code>Remove-Item</code> – odstranění souboru nebo složky</li>
+      <li class="list-group-item"><code>Clear-RecycleBin</code> – vyprázdnění koše</li>
+      <li class="list-group-item"><code>Move-Item</code> – přesun souboru</li>
+      <li class="list-group-item"><code>Start-Sleep -Seconds 5</code> – pauza ve skriptu</li>
+    </ul>
+  
+    <!-- Interaktivní skripty -->
+    <h5 class="mt-5">Automatizace: Skripty pro vypnutí/restart počítače</h5>
+    <p>Představ si, že při vypínání počítače chceš nejdříve:</p>
+    <ol>
+      <li>Vyhledat aktualizace</li>
+      <li>Vymazat koš</li>
+      <li>Přesunout soubory ze složky Stažené do koše</li>
+    </ol>
+    <p>Zde je ukázka jednoduchého skriptu v PowerShellu:</p>
+  
+    <pre class="bg-dark text-light p-3 rounded"><code>
+  # Vyhledání aktualizací
+  Start-Process "powershell" -Verb runAs -ArgumentList "wuauclt /detectnow"
+  Start-Sleep -Seconds 5
+  
+  # Vyprázdnění koše
+  Clear-RecycleBin -Force
+  
+  # Přesunutí stažených souborů do koše
+  $downloads = [Environment]::GetFolderPath("UserProfile") + "\Downloads\*"
+  $recycle = [Environment]::GetFolderPath("RecycleBin")
+  Move-Item $downloads -Destination "$env:Recycle.Bin" -Force
+  
+  # Vypnutí
+  Stop-Computer -Force
+    </code></pre>
+  
+    <!-- Modální okno -->
+    <div class="mt-3">
+      <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#scriptModal">💡 Jak spustit tento skript?</button>
+    </div>
+  
+    <div class="modal fade" id="scriptModal" tabindex="-1" aria-labelledby="scriptModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="scriptModalLabel">Jak spustit PowerShell skript?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+          </div>
+          <div class="modal-body">
+            <ol>
+              <li>Otevři poznámkový blok a vlož skript.</li>
+              <li>Ulož soubor s příponou <code>.ps1</code> (např. <code>shutdown-script.ps1</code>).</li>
+              <li>Klikni pravým tlačítkem na soubor a zvol <strong>Spustit pomocí PowerShell</strong>.</li>
+              <li>Ujisti se, že máš oprávnění správce.</li>
+            </ol>
+            <p><strong>Upozornění:</strong> PowerShell skripty mohou ovlivnit systém. Skriptuj s rozvahou!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Shrnutí -->
+    <div class="container my-5 p-4 border rounded bg-light">
+      <h3 class="mb-3">Shrnutí</h3>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">CMD je základní nástroj pro textovou práci, PowerShell je jeho moderní nástupce</li>
+        <li class="list-group-item">PowerShell umožňuje pokročilé automatizace a skriptování</li>
+        <li class="list-group-item">Ukázali jsme si praktický příklad skriptu pro vypnutí počítače</li>
+      </ul>
+    </div>
+  </section>
+  

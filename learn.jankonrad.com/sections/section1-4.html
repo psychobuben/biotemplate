@@ -1,0 +1,225 @@
+<section id="section1-4" class="container my-5">
+    <h3 class="mb-4">1.4 Firmware počítače (BIOS a UEFI)</h3>
+  
+    <!-- Co se naučíš ?-->
+    <div class="container my-4 p-4 border rounded bg-light">
+      <h3 class="mb-3">Co se naučíš?</h3>
+      <p>V této kapitole se dozvíš, jaký význam má firmware počítače a co je jeho úkolem při startu počítače. Naučíš se rozdíl mezi BIOS a UEFI a proč je UEFI v moderních počítačích preferováno. Také pochopíš, jaký je rozdíl mezi ROM a RAM pamětí.</p>
+      <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item"><strong>Firmware</strong>: Co je to firmware a proč je důležitý.</li>
+        <li class="list-group-item"><strong>BIOS</strong>: Jak funguje BIOS a jaké má omezení.</li>
+        <li class="list-group-item"><strong>UEFI</strong>: Moderní náhrada BIOSu a její výhody.</li>
+        <li class="list-group-item"><strong>Paměti ROM vs RAM</strong>: Základní rozdíly a jejich význam při startu počítače.</li>
+        <li class="list-group-item"><strong>POST test</strong>: Co se děje při zapnutí počítače.</li>
+      </ul>
+      <div class="alert alert-info" role="alert">
+        <strong>Tip:</strong> BIOS můžeš často spustit stiskem klávesy <kbd>DEL</kbd> nebo <kbd>F2</kbd> hned po zapnutí počítače.
+      </div>
+    </div>
+  
+    <div class="row align-items-center mb-4">
+      <div class="col-md-2 text-center">
+        <img class="img-fluid rounded-circle shadow resize-mobile"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Intel_4004.jpg/640px-Intel_4004.jpg"
+          alt="Intel čip BIOS" class="img-fluid rounded-circle shadow">
+        <p class="mt-2 text-muted small">Intel – historický výrobce BIOS čipů</p>
+      </div>
+      <div class="col-md-10">
+        <blockquote class="blockquote">
+          <p class="mb-0">„Firmware je prvním softwarem, který se spustí při startu počítače – a přitom o něm uživatel často ani neví.“</p>
+          <footer class="blockquote-footer mt-2">
+            <a href="https://en.wikipedia.org/wiki/Firmware" target="_blank">(zdroj)</a>
+          </footer>
+        </blockquote>
+      </div>
+    </div>
+  
+    <h5 class="mt-5">Firmware a jeho úloha</h5>
+    <p>
+      <strong>Firmware</strong> je speciální software uložený v čipu na základní desce počítače. Tento software je uložen ve <strong>flash paměti ROM</strong> a slouží ke spuštění a inicializaci hardwaru počítače. Poté předá řízení operačnímu systému.
+    </p>
+  
+    <h5 class="mt-4">Paměť ROM vs RAM</h5>
+    <ul class="list-group mb-4">
+      <li class="list-group-item"><strong>ROM (Read-Only Memory)</strong>: Nepřepisovatelná paměť, kde je uložen firmware. Po vypnutí napájení data zůstávají.</li>
+      <li class="list-group-item"><strong>RAM (Random Access Memory)</strong>: Dočasná operační paměť, ve které běží aplikace a operační systém. Po vypnutí se její obsah vymaže.</li>
+    </ul>
+  
+    <li class="list-group-item">
+      <strong>🧠 Hierarchie témat</strong>: BIOS a UEFI jako klíčové komponenty firmware.
+      <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse"
+        data-bs-target="#FirmwareSubmenu" aria-expanded="false" aria-controls="FirmwareSubmenu">
+        &#9660;
+      </button>
+      <ul class="list-group list-group-flush collapse mt-2" id="FirmwareSubmenu">
+        <li class="list-group-item">
+          <strong>BIOS</strong>: Starší typ firmware, který umožňuje základní nastavení a inicializaci zařízení.
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+            data-bs-target="#modalFirst">
+            Více
+          </button>
+        </li>
+        <li class="list-group-item">
+          <strong>UEFI</strong>: Novější nástupce BIOSu s moderní grafikou, podporou velkých disků a vyšší bezpečností.
+          <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal"
+            data-bs-target="#modalSecound">
+            Více
+          </button>
+        </li>
+      </ul>
+    </li>
+  
+    <!-- Rozšířená nabídka -->
+    <ul class="list-group mb-4">
+      <li class="list-group-item">
+        <strong>Rozdíly BIOS a UEFI</strong>
+        <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse"
+          data-bs-target="#firmwareCompare" aria-expanded="false" aria-controls="firmwareCompare">
+          &#9660;
+        </button>
+        <ul class="list-group list-group-flush collapse mt-2" id="firmwareCompare">
+          <li class="list-group-item">
+            <div class="container mt-5">
+              <div class="row justify-content-center">
+                <div class="col-md-8">
+                  <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                      BIOS vs UEFI
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">Srovnání vlastností</h5>
+                      <table class="table table-bordered">
+                        <thead class="table-light">
+                          <tr>
+                            <th>Vlastnost</th>
+                            <th>BIOS</th>
+                            <th>UEFI</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Grafické rozhraní</td>
+                            <td>Ne</td>
+                            <td>✅ Ano</td>
+                          </tr>
+                          <tr>
+                            <td>Podpora disků > 2TB</td>
+                            <td>❌ Ne</td>
+                            <td>✅ Ano</td>
+                          </tr>
+                          <tr>
+                            <td>Rychlost bootování</td>
+                            <td>Pomalejší</td>
+                            <td>Rychlejší</td>
+                          </tr>
+                          <tr>
+                            <td>Zabezpečení (Secure Boot)</td>
+                            <td>Ne</td>
+                            <td>✅ Ano</td>
+                          </tr>
+                        </tbody>
+                      </table>
+  
+                      <h5 class="mt-4">Zdroje</h5>
+                      <ul>
+                        <li><a href="https://en.wikipedia.org/wiki/BIOS" target="_blank">Wikipedia – BIOS</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/UEFI" target="_blank">Wikipedia – UEFI</a></li>
+                        <li><a href="https://www.intel.com/content/www/us/en/support/articles/000023849.html" target="_blank">Intel: BIOS vs UEFI</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  
+    <p>💡 Hint: V UEFI lze používat myš a podporuje moderní bezpečnostní standardy jako je Secure Boot.</p>
+  
+    <!-- Shrnutí lekce -->
+    <div class="container my-4 p-4 border rounded bg-light">
+      <h3 class="mb-3">Shrnutí kapitoly</h3>
+      <p>V této kapitole jsme si vysvětlili, co je firmware a jakou roli hraje BIOS a UEFI při startu počítače. Porovnali jsme jejich výhody a nevýhody a naučili jsme se rozdíl mezi pamětí ROM a RAM.</p>
+      <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item"><strong>Firmware</strong>: První software, který se spouští při zapnutí počítače.</li>
+        <li class="list-group-item"><strong>BIOS</strong>: Starší verze firmware, omezené možnosti.</li>
+        <li class="list-group-item"><strong>UEFI</strong>: Moderní náhrada BIOSu.</li>
+        <li class="list-group-item"><strong>ROM vs RAM</strong>: ROM uchovává firmware, RAM slouží k běhu programů.</li>
+        <li class="list-group-item"><strong>POST test</strong>: První kontrola po zapnutí počítače.</li>
+      </ul>
+      <div class="alert alert-info" role="alert">
+        <strong>Tip:</strong> Zkuste si v BIOS/UEFI nastavit bootovací prioritu a pozorujte rozdíl při startu.
+      </div>
+    </div>
+  
+    <!-- Zdroje -->
+    <hr>
+    <h6>Odkazy na použité zdroje</h6>
+    <ol class="small">
+      <li><a href="https://cs.wikipedia.org/wiki/Firmware" target="_blank">Wikipedia: Firmware</a></li>
+      <li><a href="https://cs.wikipedia.org/wiki/BIOS" target="_blank">Wikipedia: BIOS</a></li>
+      <li><a href="https://cs.wikipedia.org/wiki/UEFI" target="_blank">Wikipedia: UEFI</a></li>
+      <li><a href="https://www.intel.com" target="_blank">Intel.com: BIOS vs UEFI</a></li>
+      <li><a href="https://learn.microsoft.com/" target="_blank">Microsoft Learn</a></li>
+    </ol>
+  </section>
+  
+  <!-- Modály -->
+  <div class="modal fade" id="modalFirst" tabindex="-1" aria-labelledby="modalFirstLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">BIOS</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>BIOS</strong> je zkratka pro „Basic Input Output System“. Jedná se o první program, který se spustí po zapnutí počítače.</p>
+          <h6>Hlavní funkce BIOSu</h6>
+          <ul>
+            <li>Inicializace hardwaru</li>
+            <li>POST test (Power-On Self Test)</li>
+            <li>Nastavení bootovací sekvence</li>
+            <li>Nastavení hodin, zabezpečení a základního systému</li>
+          </ul>
+          <h6>💡 Shrnutí</h6>
+          <p>BIOS je jednoduché prostředí bez myši. Je omezený velikostí, obvykle 1 MB nebo méně.</p>
+          <hr>
+          <h6>📚 Zdroje a doporučená četba</h6>
+          <ul>
+            <li><a href="https://cs.wikipedia.org/wiki/BIOS" target="_blank">Wikipedia – BIOS</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="modalSecound" tabindex="-1" aria-labelledby="modalSecoundLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">UEFI</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>UEFI</strong> znamená „Unified Extensible Firmware Interface“. Jedná se o moderní verzi firmware, která nahradila BIOS.</p>
+          <h6>Výhody UEFI</h6>
+          <ul>
+            <li>Podpora větších disků (více než 2 TB)</li>
+            <li>Grafické rozhraní a ovládání myší</li>
+            <li>Lepší bezpečnost díky funkci Secure Boot</li>
+            <li>Možnost síťového bootování (PXE)</li>
+          </ul>
+          <h6>💡 Shrnutí</h6>
+          <p>UEFI je moderní a výkonnější nástroj pro řízení startu počítače než BIOS.</p>
+          <hr>
+          <h6>📚 Zdroje a doporučená četba</h6>
+          <ul>
+            <li><a href="https://cs.wikipedia.org/wiki/UEFI" target="_blank">Wikipedia – UEFI</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  

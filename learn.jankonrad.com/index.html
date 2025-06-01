@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dokumentace s vyhledáváním a přepínačem režimu</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./CSS/animace.css">
+  <link rel="stylesheet" href="./CSS/carousel.css">
+  <link rel="stylesheet" href="./CSS/carousel.rtl.css">
+
+  
+  <style>
+    body {
+      padding-top: 3.8rem;
+      padding-bottom: 0.5rem;
+      background: #f8f9fa;
+      transition: background-color 0.3s, color 0.3s;
+      scroll-behavior: smooth;
+    }
+
+    /* Užší sidebar */
+    #sidebarNav {
+      position: sticky;
+      top: 0.5rem;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
+      padding-right: 0.75rem;
+      width: 12rem;
+      font-size: 0.9rem;
+      background: #fff;
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    /* Scrollovatelný obsah s menšími odsazeními */
+    #scrollspyContent {
+      position: relative;
+      height: 90vh;
+      overflow-y: auto;
+      padding: 1rem 1.5rem;
+      background: #fff;
+      border-radius: 0.5rem;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+
+    /* Menší odsazení podkapitol v navigaci */
+    .nav-link.ms-1 {
+      margin-left: 0.8rem !important;
+    }
+
+    .nav-link.ms-2 {
+      margin-left: 1.4rem !important;
+    }
+
+    /* Aktivní odkaz */
+    .nav-link.active {
+      font-weight: 600;
+      background-color: #e9f5ff;
+      border-radius: 0.25rem;
+    }
+
+    /* Mobilní menu nahoře: tlačítko + vyhledávání + přepínač motivu */
+    #mobileMenuWrapper {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    #mobileMenuBtn {
+      font-size: 1.6rem;
+      user-select: none;
+    }
+
+    /* Vyhledávací pole v mobilu (teď i na desktopu) */
+    #mobileSearch {
+      flex-grow: 1;
+      font-size: 0.9rem;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      position: relative;
+   
+    }
+
+    /* Tlačítko přepínače motivu */
+    #themeToggleBtn {
+      font-size: 1.3rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #333;
+    }
+
+    #themeToggleBtn:hover {
+      color: #0d6efd;
+    }
+
+    /* Menu v collapse */
+    #mobileNav {
+      max-height: 70vh;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 0.5rem;
+      border: 1px solid #ddd;
+      padding: 0.5rem 1rem;
+    }
+
+    /* Hierarchické odsazení dle úrovní */
+    #mobileNav a.nav-link.ms-1 {
+      padding-left: 1rem;
+    }
+
+    #mobileNav a.nav-link.ms-2 {
+      padding-left: 1.8rem;
+    }
+
+    /* Dark mode styly */
+    body.dark-mode {
+      background: #121212;
+      color: #e1e1e1;
+    }
+
+    body.dark-mode #sidebarNav,
+    body.dark-mode #scrollspyContent,
+    body.dark-mode #mobileNav {
+      background: #1e1e1e;
+      border-color: #333;
+      color: #e1e1e1;
+    }
+
+    body.dark-mode .nav-link.active {
+      background-color: #333;
+    }
+
+    body.dark-mode #mobileSearch {
+      background: #333;
+      border-color: #555;
+      color: #eee;
+    }
+
+    body.dark-mode #themeToggleBtn {
+      color: #bbb;
+    }
+
+    /* Tlačítko X pro vymazání vyhledávání */
+    #clearSearchBtn {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      display: none;
+      color: #999;
+    }
+
+    #clearSearchBtn:hover {
+      color: #555;
+    }
+
+
+    @media (max-width: 576px) {
+      .resize-mobile {
+        max-width: 200px;
+        width: 100%;
+        margin: 0 auto;
+        /* vycentrování */
+      }
+    }
+
+
+    /* Na desktopu schováme hamburger */
+    @media (min-width: 768px) {
+      #mobileMenuBtn {
+        display: none;
+      }
+
+      /* Mobilní navigace je skryté na desktopu */
+      #mobileNav {
+        display: none !important;
+      }
+
+      /* Vyhledávání je vždy viditelné i na desktopu (v sidebaru) */
+      #desktopSearchWrapper {
+        margin-bottom: 1rem;
+      }
+
+    }
+
+    /* Na mobilech sidebar skryjeme */
+    @media (max-width: 767.98px) {
+      #sidebarNav {
+        display: none !important;
+      }
+
+      /* Na mobilech vyhledávací pole zůstane nahoře */
+      #desktopSearchWrapper {
+        display: none;
+      }
+    }
+    .section-wrapper {
+  scroll-margin-top: 80px; /* výška tvého headeru + mezera */
+}
+
+  </style>
+</head>
+
+<body>
+   <header id="main-header" class="custom-header" data-bs-theme="dark"></header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="container-fluid"> <a class="navbar-brand" href="#">Jan Konrád</a> <button class="navbar-toggler"
+          type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
+          aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item"> <a class="nav-link" aria-current="page" href="/jan.konrad.learn.com-v.2/index.html">Domů</a> </li>
+            <li class="nav-item"> <a class="nav-link" aria-current="page" href="/jan.konrad.learn.com-v.2/learn.jankonrad.com/index.html">Výuka</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="#">3D grafika</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="#">Webové stránky</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="#">Kontakt</a> </li>
+          
+          </ul>
+       
+        </div>
+      </div>
+    </nav>
+  </header>
+
+
+  <div class="container-fluid">
+    
+    <!-- Mobilní menu nahoře pro mobil -->
+    <div id="mobileMenuWrapper" role="region" aria-label="Mobilní menu">
+      <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav"
+        aria-expanded="false" aria-controls="mobileNav" id="mobileMenuBtn" title="Otevřít menu"
+        aria-label="Otevřít menu">
+        &#9776;
+      </button>
+      <input type="search" id="mobileSearch" placeholder="Hledat..." aria-label="Hledat v menu" autocomplete="off" />
+      <button id="clearSearchBtn" aria-label="Vymazat vyhledávání" title="Vymazat vyhledávání">×</button>
+      <button id="themeToggleBtn" title="Přepnout téma: světlý / tmavý / automatický"
+        aria-label="Přepnout téma: světlý / tmavý / automatický">
+        🌗
+      </button>
+    </div>
+
+    <!-- Mobilní navigace -->
+    <div class="collapse" id="mobileNav" aria-label="Mobilní navigace">
+      <nav class="nav flex-column">
+        <a class="nav-link" href="#section1" data-section="section1">1. Základy práce s počítačem</a>
+        <a class="nav-link ms-1" href="#section1-1" data-section="section1-1">1.1 Úvod do práce s počítačem</a>
+        <a class="nav-link ms-1" href="#section1-2" data-section="section1-2">1.2 Co je počítač a jak funguje (základní principy výpočetní
+          techniky)</a>
+        <a class="nav-link ms-1" href="#section1-3" data-section="section1-3" >1.3 Typy počítačů a zařízení (notebook, PC, tablet, mobil,
+          periferie)</a>
+        <a class="nav-link ms-1" href="#section1-4" data-section="section1-4" >1.4 Firmware počítače (BIOS a UEFI)</a>
+      
+        <a class="nav-link ms-1" href="#section1-5" data-section="section1-5" >1.5 Struktura a funkce systému Windows</a>
+        <a class="nav-link ms-1" href="#section1-6" data-section="section1-6">1.6 Práce se soubory a složkami</a>
+        <a class="nav-link ms-1" href="#section1-7" data-section="section1-7">1.7 Příkazový řádek (CMD) – základy práce s textovým
+          rozhraním</a>
+        <a class="nav-link ms-1" href="#section1-10">1.10 Základy bezpečnosti a údržby systému</a>
+        <a class="nav-link" href="#section2">2. Kancelářské informační systémy</a>
+        <a class="nav-link ms-1" href="#section2-1">2.1 Textové editory – Word, LibreOffice Writer, Google
+          Dokumenty</a>
+        <a class="nav-link ms-2" href="#section2-1-1">2.1.1 Formátování, styly, záhlaví, patičky</a>
+        <a class="nav-link ms-2" href="#section2-1-2">2.1.2 Práce s obrázky a tabulkami</a>
+        <a class="nav-link ms-2" href="#section2-1-3">2.1.3 Export, sdílení a tisk dokumentů</a>
+        <a class="nav-link ms-2" href="#section2-1-4">2.1.4 Pokročilé úpravy textu, úvod do LaTeX</a>
+        <a class="nav-link ms-1" href="#section2-2">2.2 Tabulkové procesory – Excel, LibreOffice Calc, Google
+          Sheets</a>
+        <a class="nav-link ms-2" href="#section2-2-1">2.2.1 Vzorce, funkce, filtrování</a>
+        <a class="nav-link ms-2" href="#section2-2-2">2.2.2 Tvorba grafů, analýza dat</a>
+        <a class="nav-link ms-1" href="#section2-3">2.3 Prezentační software – PowerPoint, Impress, Canva</a>
+        <a class="nav-link ms-2" href="#section2-3-1">2.3.1 Principy efektivní prezentace</a>
+        <a class="nav-link ms-2" href="#section2-3-2">2.3.2 Figma jako moderní nástroj vizuální prezentace</a>
+        <a class="nav-link ms-1" href="#section2-1">2. Projekt</a>
+        <a class="nav-link" href="#section3" data-section="section3">3. Práce s daty a informační systémy</a>
+        <a class="nav-link ms-1" href="#section3-1">3.1 Co jsou data a informace</a>
+        <a class="nav-link ms-1" href="#section3-2">3.2 Datové typy (text, čísla, logické hodnoty)</a>
+        <a class="nav-link ms-1" href="#section3-3">3.3 Uložení dat v prohlížeči – localStorage,
+          sessionStorage</a>
+        <a class="nav-link ms-1" href="#section3-4">3.4 JSON – formát pro výměnu dat</a>
+        <a class="nav-link ms-1" href="#section3-5">3.5 Vizualizace dat – jednoduché grafy pomocí Chart.js</a>
+        <a class="nav-link ms-1" href="#section3-6">3.6 Práce s IndexedDB – databáze v prohlížeči</a>
+        <a class="nav-link ms-1" href="#section3-7">3.7 Načítání dat z API pomocí fetch</a>
+        <a class="nav-link ms-1" href="#section3-8">3.8 Jednoduchý backend v Node.js – Express a ukládání
+          dat</a>
+        <a class="nav-link ms-1" href="#section3-9">3.9 JSON jako databáze – simulace</a>
+        <a class="nav-link ms-1" href="#section3-10">3.10 Cloudové databáze – Firebase jako IS školy /
+          podniku</a>
+        <a class="nav-link" href="#section4">4. Algoritmizace a programování </a>
+        <a class="nav-link ms-1" href="#section4-1">4.1 Co je algoritmus (reálné příklady)</a>
+        <a class="nav-link ms-1" href="#section4-2">4.2 Vývojový diagram, pseudokód</a>
+        <a class="nav-link ms-1" href="#section4-3">4.3 Scratch nebo Blockly – vizuální základy</a>
+        <a class="nav-link ms-1" href="#section4-4">4.4 Úvod do JavaScriptu (proměnné, operace)</a>
+        <a class="nav-link ms-1" href="#section4-5">4.5 Podmínky, cykly, základní funkce v JS</a>
+        <a class="nav-link ms-1" href="#section4-6">4.6 Práce s DOM (měnění obsahu webu)</a>
+        <a class="nav-link ms-1" href="#section4-7">4.7 Formuláře, události a validace</a>
+        <a class="nav-link ms-1" href="#section4-8">4.8 Funkce, pole, objekty</a>
+        <a class="nav-link ms-1" href="#section4-9">4.9 Úvod do OOP v JavaScriptu</a>
+        <a class="nav-link ms-1" href="#section4-10">4.10 Asynchronní JS – fetch, async/await, API</a>
+        <a class="nav-link ms-1" href="#section4-11">4.11 Projekt – jednoduchá JS aplikace (např. todo list)</a>
+        <a class="nav-link ms-1" href="#section4-12">4.12 Git a GitHub – verzování</a>
+        <a class="nav-link" href="#section5">5. Digitální technologie a hardware</a>
+        <a class="nav-link ms-1" href="#section5-1">5.1 Vnitřní stavba počítače – CPU, RAM, HDD, SSD</a>
+        <a class="nav-link ms-1" href="#section5-2">5.2 Vstupní a výstupní zařízení</a>
+        <a class="nav-link ms-1" href="#section5-3">5.3 Síťové komponenty – router, switch, Wi-Fi</a>
+        <a class="nav-link ms-1" href="#section5-4">5.4 Instalace a konfigurace základního hardwaru</a>
+        <a class="nav-link ms-1" href="#section5-5">5.5 Správa systému a údržba (aktualizace, ovladače)</a>
+        <a class="nav-link" href="#section6">6. Internet, komunikace a bezpečnost</a>
+        <a class="nav-link ms-1" href="#section6-1">6.1 Co je internet, IP adresa, DNS</a>
+        <a class="nav-link ms-1" href="#section6-2">6.2 Webové prohlížeče a vyhledávače</a>
+        <a class="nav-link ms-1" href="#section6-3">6.3 E-mail a digitální komunikace</a>
+        <a class="nav-link ms-1" href="#section6-4">6.4 Základy kybernetické bezpečnosti (hesla, phishing)</a>
+        <a class="nav-link ms-1" href="#section6-5">6.5 Právní a etické aspekty – GDPR, autorský zákon, fake
+          news</a>
+        <a class="nav-link ms-1" href="#section6-6">6.6 Základy práce s VPN, dvoufázové ověření, digitální
+          identita</a>
+
+
+
+
+
+      </nav>
+    </div>
+
+    <div class="row">
+      <!-- Sidebar navigace pro desktop -->
+      <nav id="sidebarNav" class="col-md-3" aria-label="Sidebar navigace">
+        <!-- Vyhledávání přímo v sidebaru na desktopu -->
+
+        <div id="desktopSearchWrapper">
+          <input type="search" id="desktopSearch" placeholder="Hledat kapitolu..." aria-label="Hledat kapitolu"
+            autocomplete="off" style="display: none;" />
+          <button id="clearDesktopSearchBtn" aria-label="Vymazat vyhledávání" title="Vymazat vyhledávání"
+            style="display:none;">×</button>
+        </div>
+
+        <nav id="navbar-example" class="nav flex-column">
+          <a class="nav-link" href="#section1" data-section="section1">1. Základy práce s počítačem</a>
+          <a class="nav-link ms-1" href="#section1-1" data-section="section1-1">1.1 Úvod do práce s počítačem</a>
+          <a class="nav-link ms-1" href="#section1-2" data-section="section1-2">1.2 Co je počítač a jak funguje (základní principy
+            výpočetní techniky)</a>
+          <a class="nav-link ms-1" href="#section1-3" data-section="section1-3" >1.3 Typy počítačů a zařízení (notebook, PC, tablet,
+            mobil, periferie)</a>
+          <a class="nav-link ms-1" href="#section1-4" data-section="section1-4" >1.4 Firmware počítače (BIOS a UEFI)</a>
+        
+          <a class="nav-link ms-1" href="#section1-5" data-section="section1-5" >1.5 Struktura a funkce systému Windows</a>
+          <a class="nav-link ms-1" href="#section1-6" data-section="section1-6">1.6 Práce se soubory a složkami</a>
+          <a class="nav-link ms-1" href="#section1-7" data-section="section1-7">1.7 Příkazový řádek (CMD) – základy práce s textovým
+            rozhraním</a>
+          <a class="nav-link ms-1" href="#section1-10">1.10 Základy bezpečnosti a údržby systému</a>
+          <a class="nav-link" href="#section2">2. Kancelářské informační systémy</a>
+          <a class="nav-link ms-1" href="#section2-1">2.1 Textové editory – Word, LibreOffice Writer, Google
+            Dokumenty</a>
+          <a class="nav-link ms-2" href="#section2-1-1">2.1.1 Formátování, styly, záhlaví, patičky</a>
+          <a class="nav-link ms-2" href="#section2-1-2">2.1.2 Práce s obrázky a tabulkami</a>
+          <a class="nav-link ms-2" href="#section2-1-3">2.1.3 Export, sdílení a tisk dokumentů</a>
+          <a class="nav-link ms-2" href="#section2-1-4">2.1.4 Pokročilé úpravy textu, úvod do LaTeX</a>
+          <a class="nav-link ms-1" href="#section2-2">2.2 Tabulkové procesory – Excel, LibreOffice Calc,
+            Google Sheets</a>
+          <a class="nav-link ms-2" href="#section2-2-1">2.2.1 Vzorce, funkce, filtrování</a>
+          <a class="nav-link ms-2" href="#section2-2-2">2.2.2 Tvorba grafů, analýza dat</a>
+          <a class="nav-link ms-1" href="#section2-3">2.3 Prezentační software – PowerPoint, Impress,
+            Canva</a>
+          <a class="nav-link ms-2" href="#section2-3-1">2.3.1 Principy efektivní prezentace</a>
+          <a class="nav-link ms-2" href="#section2-3-2">2.3.2 Figma jako moderní nástroj vizuální
+            prezentace</a>
+          <a class="nav-link ms-1" href="#section2-1">2. Projekt</a>
+          <a class="nav-link" href="#section3" data-section="section3">3. Práce s daty a informační systémy</a>
+          <a class="nav-link ms-1" href="#section3-1">3.1 Co jsou data a informace</a>
+          <a class="nav-link ms-1" href="#section3-2">3.2 Datové typy (text, čísla, logické hodnoty)</a>
+          <a class="nav-link ms-1" href="#section3-3">3.3 Uložení dat v prohlížeči – localStorage,
+            sessionStorage</a>
+          <a class="nav-link ms-1" href="#section3-4">3.4 JSON – formát pro výměnu dat</a>
+          <a class="nav-link ms-1" href="#section3-5">3.5 Vizualizace dat – jednoduché grafy pomocí
+            Chart.js</a>
+          <a class="nav-link ms-1" href="#section3-6">3.6 Práce s IndexedDB – databáze v prohlížeči</a>
+          <a class="nav-link ms-1" href="#section3-7">3.7 Načítání dat z API pomocí fetch</a>
+          <a class="nav-link ms-1" href="#section3-8">3.8 Jednoduchý backend v Node.js – Express a ukládání
+            dat</a>
+          <a class="nav-link ms-1" href="#section3-9">3.9 JSON jako databáze – simulace</a>
+          <a class="nav-link ms-1" href="#section3-10">3.10 Cloudové databáze – Firebase jako IS školy /
+            podniku</a>
+          <a class="nav-link" href="#section4">4. Algoritmizace a programování </a>
+          <a class="nav-link ms-1" href="#section4-1">4.1 Co je algoritmus (reálné příklady)</a>
+          <a class="nav-link ms-1" href="#section4-2">4.2 Vývojový diagram, pseudokód</a>
+          <a class="nav-link ms-1" href="#section4-3">4.3 Scratch nebo Blockly – vizuální základy</a>
+          <a class="nav-link ms-1" href="#section4-4">4.4 Úvod do JavaScriptu (proměnné, operace)</a>
+          <a class="nav-link ms-1" href="#section4-5">4.5 Podmínky, cykly, základní funkce v JS</a>
+          <a class="nav-link ms-1" href="#section4-6">4.6 Práce s DOM (měnění obsahu webu)</a>
+          <a class="nav-link ms-1" href="#section4-7">4.7 Formuláře, události a validace</a>
+          <a class="nav-link ms-1" href="#section4-8">4.8 Funkce, pole, objekty</a>
+          <a class="nav-link ms-1" href="#section4-9">4.9 Úvod do OOP v JavaScriptu</a>
+          <a class="nav-link ms-1" href="#section4-10">4.10 Asynchronní JS – fetch, async/await, API</a>
+          <a class="nav-link ms-1" href="#section4-11">4.11 Projekt – jednoduchá JS aplikace (např. todo
+            list)</a>
+          <a class="nav-link ms-1" href="#section4-12">4.12 Git a GitHub – verzování</a>
+          <a class="nav-link" href="#section5">5. Digitální technologie a hardware</a>
+          <a class="nav-link ms-1" href="#section5-1">5.1 Vnitřní stavba počítače – CPU, RAM, HDD, SSD</a>
+          <a class="nav-link ms-1" href="#section5-2">5.2 Vstupní a výstupní zařízení</a>
+          <a class="nav-link ms-1" href="#section5-3">5.3 Síťové komponenty – router, switch, Wi-Fi</a>
+          <a class="nav-link ms-1" href="#section5-4">5.4 Instalace a konfigurace základního hardwaru</a>
+          <a class="nav-link ms-1" href="#section5-5">5.5 Správa systému a údržba (aktualizace, ovladače)</a>
+          <a class="nav-link" href="#section6">6. Internet, komunikace a bezpečnost</a>
+          <a class="nav-link ms-1" href="#section6-1">6.1 Co je internet, IP adresa, DNS</a>
+          <a class="nav-link ms-1" href="#section6-2">6.2 Webové prohlížeče a vyhledávače</a>
+          <a class="nav-link ms-1" href="#section6-3">6.3 E-mail a digitální komunikace</a>
+          <a class="nav-link ms-1" href="#section6-4">6.4 Základy kybernetické bezpečnosti (hesla,
+            phishing)</a>
+          <a class="nav-link ms-1" href="#section6-5">6.5 Právní a etické aspekty – GDPR, autorský zákon, fake
+            news</a>
+          <a class="nav-link ms-1" href="#section6-6">6.6 Základy práce s VPN, dvoufázové ověření, digitální
+            identita</a>
+
+        </nav>
+      </nav>
+
+      <!-- Hlavní obsah -->
+      <main id="scrollspyContent" class="col-md-9" tabindex="0" role="main" aria-label="Obsah dokumentace"
+        data-bs-spy="scroll" data-bs-target="#sidebarNav" data-bs-offset="20" tabindex="0">
+
+      <main id="content">
+      
+      </main>
+
+
+
+
+
+  
+  
+
+   
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const lessonSelect = document.getElementById('lesson');
+    lessonSelect.addEventListener('change', function () {
+        const selectedLesson = this.value;
+        generateExercise(selectedLesson);
+    });
+});
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (() => {
+      // Přepínač motivu mezi auto / dark / light, uložený v localStorage
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const body = document.body;
+
+      function applyTheme(theme) {
+        if (theme === 'auto') {
+          body.classList.remove('dark-mode');
+        } else if (theme === 'dark') {
+          body.classList.add('dark-mode');
+        } else {
+          body.classList.remove('dark-mode');
+        }
+        localStorage.setItem('preferredTheme', theme);
+        updateToggleButtonIcon(theme);
+      }
+
+      function updateToggleButtonIcon(theme) {
+        if (theme === 'auto') themeToggleBtn.textContent = '🌗'; // auto
+        else if (theme === 'dark') themeToggleBtn.textContent = '🌙'; // dark
+        else themeToggleBtn.textContent = '☀️'; // light
+      }
+
+      // Načíst preferované téma
+      const savedTheme = localStorage.getItem('preferredTheme') || 'auto';
+      applyTheme(savedTheme);
+
+      themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = localStorage.getItem('preferredTheme') || 'auto';
+        if (currentTheme === 'auto') applyTheme('dark');
+        else if (currentTheme === 'dark') applyTheme('light');
+        else applyTheme('auto');
+      });
+
+      // --- Vyhledávání v mobilním menu ---
+
+      const mobileSearch = document.getElementById('mobileSearch');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      const mobileNav = document.getElementById('mobileNav');
+
+      mobileSearch.addEventListener('input', () => {
+        const filter = mobileSearch.value.toLowerCase();
+        let anyVisible = false;
+        mobileNav.querySelectorAll('a.nav-link').forEach(link => {
+          const text = link.textContent.toLowerCase();
+          if (text.includes(filter)) {
+            link.style.display = '';
+            anyVisible = true;
+          } else {
+            link.style.display = 'none';
+          }
+        });
+        clearSearchBtn.style.display = filter ? 'inline' : 'none';
+
+        // Automaticky rozbalit menu na mobilu, když něco hledám
+        if (filter && !mobileNav.classList.contains('show')) {
+          const bsCollapse = bootstrap.Collapse.getOrCreateInstance(mobileNav);
+          bsCollapse.show();
+        }
+        // Když je vyhledávání prázdné, schovat menu
+        if (!filter) {
+          const bsCollapse = bootstrap.Collapse.getOrCreateInstance(mobileNav);
+          bsCollapse.hide();
+        }
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        mobileSearch.value = '';
+        clearSearchBtn.style.display = 'none';
+        // Reset viditelnosti položek
+        mobileNav.querySelectorAll('a.nav-link').forEach(link => {
+          link.style.display = '';
+        });
+        // Zavřít mobilní menu
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(mobileNav);
+        bsCollapse.hide();
+
+        // Na mobilu scroll na začátek obsahu
+        document.getElementById('scrollspyContent').scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // --- Kliknutí na link v mobilním menu zavře menu a scrollne ---
+
+      mobileNav.querySelectorAll('a.nav-link').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href').substring(1);
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
+          // Zavřít menu na mobilu
+          const bsCollapse = bootstrap.Collapse.getOrCreateInstance(mobileNav);
+          bsCollapse.hide();
+        });
+      });
+
+      // --- Vyhledávání v desktopové sidebar navigaci ---
+
+      const desktopSearch = document.getElementById('desktopSearch');
+      const clearDesktopSearchBtn = document.getElementById('clearDesktopSearchBtn');
+      const desktopNavLinks = document.querySelectorAll('#sidebarNav nav a.nav-link');
+
+      desktopSearch.addEventListener('input', () => {
+        const filter = desktopSearch.value.toLowerCase().trim();
+        clearDesktopSearchBtn.style.display = filter ? 'inline' : 'none';
+
+        desktopNavLinks.forEach(link => {
+          const text = link.textContent.toLowerCase();
+          if (text.includes(filter)) {
+            link.style.display = '';
+          } else {
+            link.style.display = 'none';
+          }
+        });
+      });
+
+      clearDesktopSearchBtn.addEventListener('click', () => {
+        desktopSearch.value = '';
+        clearDesktopSearchBtn.style.display = 'none';
+        desktopNavLinks.forEach(link => {
+          link.style.display = '';
+        });
+        // Scrollnout na začátek obsahu
+        document.getElementById('scrollspyContent').scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // --- Kliknutí na odkaz v desktopovém menu: scroll na sekci ---
+
+      desktopNavLinks.forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href').substring(1);
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+            // Pokud chceš, můžeš tady přidat zvýraznění aktivní položky manuálně
+          }
+        });
+      });
+
+    })();
+  </script>
+  <script>
+
+    // Vyhledávání v mobilní i desktopové verzi
+    const mobileSearch = document.getElementById('mobileSearch');
+    const desktopSearch = document.getElementById('desktopSearch');
+    const navLinks = document.querySelectorAll('#navbar-example a, #mobileNav a');
+
+    function filterLinks(input, clearBtn) {
+      const query = input.value.toLowerCase();
+      clearBtn.style.display = query ? 'inline' : 'none';
+      navLinks.forEach(link => {
+        const text = link.textContent.toLowerCase();
+        if (text.includes(query)) {
+          link.style.display = '';
+        } else {
+          link.style.display = 'none';
+        }
+      });
+    }
+
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    mobileSearch.addEventListener('input', () => filterLinks(mobileSearch, clearSearchBtn));
+    clearSearchBtn.addEventListener('click', () => {
+      mobileSearch.value = '';
+      filterLinks(mobileSearch, clearSearchBtn);
+    });
+
+    const clearDesktopSearchBtn = document.getElementById('clearDesktopSearchBtn');
+    desktopSearch.addEventListener('input', () => filterLinks(desktopSearch, clearDesktopSearchBtn));
+    clearDesktopSearchBtn.addEventListener('click', () => {
+      desktopSearch.value = '';
+      filterLinks(desktopSearch, clearDesktopSearchBtn);
+    });
+  </script>
+  <script src="./fullsreenImg.js"></script>
+  <script src="./js/router.js"></script>
+  
+</body>
+
+</html>

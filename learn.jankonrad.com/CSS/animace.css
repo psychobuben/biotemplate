@@ -1,0 +1,148 @@
+.von-neumann-animation {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    background: #f9f9f9;
+  }
+  
+  .memory {
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    width: 100px;
+    height: 100px;
+    background: #dbeafe;
+    border: 2px solid #60a5fa;
+    border-radius: 5px;
+    padding: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  }
+  
+  .memory .instruction,
+  .memory .data {
+    margin: 6px 0;
+    padding: 4px;
+    background: #fff;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  .cpu {
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    width: 80px;
+    height: 60px;
+    background: #fcd34d;
+    border: 2px solid #fbbf24;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  }
+  
+  .arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 12px solid #3b82f6;
+    animation: moveArrow 2s infinite;
+  }
+  
+  .arrow-instruction {
+    top: 40px;
+    left: 110px;
+  }
+  
+  .arrow-data {
+    top: 80px;
+    left: 110px;
+    animation-delay: 1s;
+  }
+  
+  @keyframes moveArrow {
+    0% { transform: translateX(0); opacity: 0; }
+    30% { opacity: 1; }
+    70% { transform: translateX(80px); opacity: 1; }
+    100% { transform: translateX(80px); opacity: 0; }
+  }
+  .sequence-animation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: relative;
+  }
+  
+  .cpu-box {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+  }
+  
+  .instruction-step {
+    background-color: #f8f9fa;
+    border: 2px solid #dee2e6;
+    padding: 12px 16px;
+    border-radius: 6px;
+    position: relative;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+  }
+  
+  .step1,
+  .step2,
+  .step3 {
+    animation: highlightStep 6s infinite;
+  }
+  
+  .step2 {
+    animation-delay: 2s;
+  }
+  .step3 {
+    animation-delay: 4s;
+  }
+  
+  @keyframes highlightStep {
+    0% { opacity: 0.4; }
+    10% { opacity: 1; }
+    30% { opacity: 1; }
+    40% { opacity: 0.4; }
+    100% { opacity: 0.4; }
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  .bounce {
+    animation: bounce 1.2s infinite;
+  }
+  
+  @keyframes swing {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(5deg); }
+  }
+  .swing {
+    animation: swing 1.5s ease-in-out infinite;
+  }
+  .section-wrapper {
+    min-height: 80vh;
+  }
